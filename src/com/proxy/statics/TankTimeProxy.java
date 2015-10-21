@@ -27,6 +27,5 @@ public class TankTimeProxy implements Moving{
 		long end = System.currentTimeMillis();
 		System.out.println("运行时间:"+(end - start));
 	}
-
 	
 }
