@@ -1,9 +1,7 @@
 package com.thread;
 
-import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 
 /**
@@ -26,29 +24,5 @@ public class MainService {
 		exec.shutdown();
 	}
 	
-	/*public String searchFile(String name,String path){
-		File f = new File(path);
-		if(f.isDirectory() && f.listFiles() != null){
-			for(File sf:f.listFiles()){
-				if(sf.isDirectory()){
-					Runnable r = new FileSearch(name, sf.getAbsolutePath(),tp);
-					tp.execute(r);
-				}
-				else{
-					if(name != null && name.equals(sf.getName())){
-						retVal = sf.getAbsolutePath();
-						System.out.println("找到了："+retVal);
-						this.tpe.shutdownNow();
-					}
-				}
-			}
-		}
-		else if(f.isFile() && name != null && name.equals(f.getName())){
-			System.out.println(f.getName());
-			retVal = f.getAbsolutePath();
-			this.tpe.shutdownNow();
-			System.out.println("找到了："+retVal);
-		}
-		return retVal;
-	}*/
+	
 }
