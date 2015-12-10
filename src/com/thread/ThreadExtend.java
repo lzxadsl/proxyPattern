@@ -1,33 +1,31 @@
 package com.thread;
 
-import java.util.Scanner;
+import java.sql.SQLException;
+
 
 public class ThreadExtend extends Thread{
+	ConnThreadLocation conn;
 	
-	public void run(){
-		int i = 0;
-		synchronized(this){
-			try {
-				while(true){
-					//System.out.println("开始工作啦..."+i);
-					//sleep(1000);
-					System.out.println("开始工作啦..."+i);
-					this.wait();
-					i++;
-				}
-			} catch (InterruptedException e){
-				e.printStackTrace();
-			}
-			System.out.println("等待输入0...");
-			Scanner s = new Scanner(System.in);
-			if(Integer.valueOf(s.next())==0){
-				this.notify();
-			}
-		}
+	public ThreadExtend(ConnThreadLocation con){
+		this.conn = con;
 	}
 	
-	public static void main(String[] args) {
-		ThreadExtend t = new ThreadExtend();
-		t.start();
+	public void run(){
+		try {
+			conn.addTopic();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println(getName()+"--");
+	}
+	
+	public static void main(String[] args){
+		ConnThreadLocation con = new ConnThreadLocation();
+		Thread t1 = new ThreadExtend(con);
+		t1.start();
+		/*for(int i=0;i<10;i++){
+			Thread t1 = new ThreadExtend(con);
+			t1.start();
+		}*/
 	}
 }
