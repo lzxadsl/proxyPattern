@@ -1,31 +1,45 @@
 package com.thread;
 
-import java.sql.SQLException;
+import com.thread.model.User;
 
 
 public class ThreadExtend extends Thread{
 	ConnThreadLocation conn;
-	
-	public ThreadExtend(ConnThreadLocation con){
+	//User conn;
+	public ThreadExtend(ConnThreadLocation con,String name){
+		super(name);
 		this.conn = con;
 	}
 	
 	public void run(){
 		try {
-			conn.addTopic();
-		} catch (SQLException e) {
+			if("2".equals(getName())){
+				synchronized (conn) {
+					System.out.println(getName()+"线程被停止");
+					conn.wait();
+				}
+			}
+			else if("8".equals(getName())){
+				synchronized (conn) {
+					System.out.println(getName()+"线程被唤醒");
+					conn.notify();
+				}
+			}
+			System.out.println(getName()+"线程创建。。。。。");
+			//User user = conn.getUser();
+			//System.out.println(user.getName());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(getName()+"--");
 	}
 	
 	public static void main(String[] args){
 		ConnThreadLocation con = new ConnThreadLocation();
-		Thread t1 = new ThreadExtend(con);
-		t1.start();
-		/*for(int i=0;i<10;i++){
-			Thread t1 = new ThreadExtend(con);
+		//User con = new User();  
+		for(int i=0;i<10;i++){
+			Thread t1 = new ThreadExtend(con,String.valueOf(i));
 			t1.start();
-		}*/
+		}
+		//System.out.println("-----------:"+con.getUser().getName());
 	}
 }
