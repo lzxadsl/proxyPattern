@@ -62,7 +62,11 @@ public class MainTest {
 	
 	public static void main(String[] args) {
 		//testMove();
-		testJdkProxy();
-		ProxyGeneratorUtils.writeProxyClassToHardDisk("D:/$Proxy11.class"); 
+		//testJdkProxy();
+		//ProxyGeneratorUtils.writeProxyClassToHardDisk("D:/$Proxy11.class"); 
+		Long l = new Long(9);
+		int i = 8;
+		double x = 10.9;
+		System.out.println(l+i+x);
 	}
 }

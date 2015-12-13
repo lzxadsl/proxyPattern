@@ -1,5 +1,7 @@
 package com.string;
 
+import java.lang.reflect.Method;
+
 /**
  * String 测试
  * @author LiZhiXian
@@ -8,6 +10,13 @@ package com.string;
  */
 public class StringTest {
 
+	static{
+		System.out.println("我是被加载到内存时就执行");
+	}
+	public StringTest(){
+		System.out.println("我是在对象被创建时执行........");
+	}
+	
 	public void strAppend(){
 		long start = System.currentTimeMillis();
 		String str = "";
@@ -28,8 +37,9 @@ public class StringTest {
 		System.out.println("总耗时："+(end-start));
 	}
 	
-	public static void main(String[] args) {
-		StringTest st = new StringTest();
-		st.strBufAppend();
+	public static void main(String[] args) throws Exception {
+		//StringTest st = new StringTest();
+		//st.strBufAppend();
+		Class clazz = Class.forName("com.string.StringTest");
 	}
 }

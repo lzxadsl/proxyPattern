@@ -1,7 +1,5 @@
 package com.thread;
 
-import com.thread.model.User;
-
 
 public class ThreadExtend extends Thread{
 	ConnThreadLocation conn;
@@ -19,9 +17,14 @@ public class ThreadExtend extends Thread{
 					conn.wait();
 				}
 			}
+			else if("3".equals(getName())){
+				synchronized (conn) {
+					throw new RuntimeException(getName()+"线程抛出异常....");
+				}
+			}
 			else if("8".equals(getName())){
 				synchronized (conn) {
-					System.out.println(getName()+"线程被唤醒");
+					System.out.println("等待中的线程被唤醒。。。。。");
 					conn.notify();
 				}
 			}
