@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -38,7 +37,7 @@ public class ChannelTest {
 		FileChannel channel = null;
 		try {
 			File file = new File(path);
-			file.setWritable(true);
+			//file.setWritable(true);
 			out = new FileOutputStream(file);
 			channel = out.getChannel();
 			ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
