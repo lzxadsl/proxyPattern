@@ -21,7 +21,8 @@ public class ChannelTest {
 	private final static int BUF_SIZE = 1024;
 	
 	public ChannelTest(){
-		URL url = ChannelTest.class.getClassLoader().getResource("remark.log");
+		ChannelTest.class.getClassLoader();
+		URL url = ClassLoader.getSystemResource("remark.log");
 		this.path = url.getPath();
 		System.out.println(path);
 	}
@@ -41,10 +42,11 @@ public class ChannelTest {
 			out = new FileOutputStream(file);
 			channel = out.getChannel();
 			ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
-			buf.put("写入了一段话，你好啊。。".getBytes());
+			buf.put("写入了一段话，你好啊1。。".getBytes());
 			out.flush();
 			buf.flip();
 			channel.write(buf);
+			//buf.compact();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -73,8 +75,9 @@ public class ChannelTest {
 			FileChannel channel = in.getChannel();
 			ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
 			int byteread = channel.read(buf);
+			//System.out.println(byteread+":"+(int)channel.size());
 			buf.flip();
-			String str = new String(buf.array(),0,(int)channel.size());
+			String str = new String(buf.array(),0,byteread);
 			System.out.println("读取文件内容。。。。。。。。。。");
 			System.out.println(str);
 			/*while(byteread != -1){
