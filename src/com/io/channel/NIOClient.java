@@ -11,6 +11,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.basic.model.User;
+
 /**
  * 客户端
  * @author LiZhiXian
@@ -60,8 +62,8 @@ public class NIOClient {
 		//接收用的缓冲区
 		ByteBuffer receivebuffer = ByteBuffer.allocate(BLOCK);
 		String receiveText;  
-        String sendText;
-        int flag = 0;
+        //String sendText;
+        //int flag = 0;
 		while(true){
 			try {
 				selector.select();
@@ -77,12 +79,11 @@ public class NIOClient {
 	                    if (client.isConnectionPending()) {  
 	                        client.finishConnect();  
 	                        System.out.println("完成连接!");  
-	                        sendbuffer.clear();  
-	                        sendbuffer.put("Hello,Server".getBytes());  
-	                        sendbuffer.flip();  
-	                        client.write(sendbuffer);  
+	                        //String text = "Hello Server";
+	                        //MessageHandleUtil.sendMessage(client, sendbuffer, text);
 	                    }  
-	                    client.register(selector, SelectionKey.OP_READ); 
+	                    //client.register(selector, SelectionKey.OP_READ); 
+	                    client.register(selector, SelectionKey.OP_WRITE); 
 	            	}else if(selectionKey.isReadable()){//是否处于读取状态
 	            		client = (SocketChannel) selectionKey.channel();  
 	                    //将缓冲区清空以备下次读取  
@@ -90,19 +91,20 @@ public class NIOClient {
 	                    //读取服务器发送来的数据到缓冲区中  
 	                    int count = client.read(receivebuffer);  
 	                    if(count > 0){  
-	                        receiveText = new String(receivebuffer.array(),0,count);  
-	                        System.out.println("AndyClient接收数据--:"+receiveText);  
+	                    	System.out.println("\r\n");
+	                    	System.out.println("--------------Andy收到服务端返回信息---------------");
+	                        //receiveText = new String(receivebuffer.array(),0,count);  
+	                    	receiveText = (String)MessageHandleUtil.receiveMessage(receivebuffer);
+	                        System.out.println(receiveText); 
+	                        System.out.println("-----------------------------------------------");
+	                        System.out.println("\r\n");
 	                        client.register(selector, SelectionKey.OP_WRITE);  
 	                    }  
 	            	}else if(selectionKey.isWritable()){//是否处于写入状态
-	            		sendbuffer.clear();  
 	                    client = (SocketChannel) selectionKey.channel();  
-	                    sendText = "AndyClient" + (flag++);  
-	                    sendbuffer.put(sendText.getBytes()); 
-	                    //将缓冲区各标志复位,因为向里面put了数据标志被改变要想从中读取数据发向服务器,就要复位  
-	                    sendbuffer.flip();  
-	                    client.write(sendbuffer);  
-	                    System.out.println("AndyClient发送数据--："+sendText);  
+	                    User user = new User();
+	                    user.setUsername("Andy");
+	                    MessageHandleUtil.sendMessage(client, sendbuffer, user);
 	                    client.register(selector, SelectionKey.OP_READ);  
 	            	}
 	            }

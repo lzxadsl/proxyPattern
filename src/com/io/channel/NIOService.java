@@ -12,6 +12,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
+import com.basic.model.User;
 
 /**
  * 服务端
@@ -72,6 +73,8 @@ public class NIOService {
 	            }
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}  
 		}
 	}
@@ -81,9 +84,10 @@ public class NIOService {
 	 * @author LiZhiXian
 	 * @version 1.0
 	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 * @date 2015-12-29 下午3:32:34
 	 */
-	public void handelRequest(SelectionKey selectionKey) throws IOException{ 
+	public void handelRequest(SelectionKey selectionKey) throws IOException, ClassNotFoundException{ 
         //发送用的缓冲区
   		ByteBuffer sendbuffer = ByteBuffer.allocate(BLOCK);
   		//接收用的缓冲区
@@ -91,7 +95,7 @@ public class NIOService {
   		ServerSocketChannel server;
   		SocketChannel client;
   		int count;
-  		String receiveText = "";
+  		//String receiveText = "";
   		String sendText;
   		
   		if(selectionKey.isAcceptable()){
@@ -109,30 +113,29 @@ public class NIOService {
   			//将缓冲区清空以备下次读取  
             receivebuffer.clear();  
             //读取服务器发送来的数据到缓冲区中  
-            count = client.read(receivebuffer);   
+            count = client.read(receivebuffer);  
             if (count > 0) {  
-                receiveText = new String( receivebuffer.array(),0,count);  
-                System.out.println("服务器端接收到数据--:"+receiveText);  
+            	//ByteArrayInputStream input = new ByteArrayInputStream(receivebuffer.array());
+            	//ObjectInputStream objInput = new ObjectInputStream(input); 
+            	//User user = (User) objInput.readObject();
+            	User user = (User)MessageHandleUtil.receiveMessage(receivebuffer);
+            	System.out.println("\r\n");
+            	System.out.println("--------------服务端收到一个请求---------------");
+            	System.out.println("用户名："+user.getUsername());
+            	System.out.println("-----------------------------------------------");
+            	System.out.println("\r\n");
                 client.register(selector, SelectionKey.OP_WRITE);  
-            }  
+            }
+            
   		}else if(selectionKey.isWritable()){
 	  		//将缓冲区清空以备下次写入  
 	        sendbuffer.clear();  
 	        // 返回为之创建此键的通道。  
 	        client = (SocketChannel) selectionKey.channel();  
-	        sendText="IM SERVICE--" + receiveText;  
-            //向缓冲区中输入数据  
-            sendbuffer.put(sendText.getBytes());  
-             //将缓冲区各标志复位,因为向里面put了数据标志被改变要想从中读取数据发向服务器,就要复位  
-            sendbuffer.flip();  
-            //输出到通道  
-            client.write(sendbuffer);  
-            System.out.println("服务器端发送数据--："+sendText);  
+	        sendText="IM SERVICE--";  
+            MessageHandleUtil.sendMessage(client, sendbuffer, sendText);
             client.register(selector, SelectionKey.OP_READ);  
   		}
-        //int len = channel.read(receivebuffer);
-        //String msg = new String(receivebuffer.array(),0,len);
-        //System.out.println(msg);
 	}
 	public static void main(String[] args) {
 		int port = 8899;
