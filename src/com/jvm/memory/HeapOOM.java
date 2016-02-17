@@ -15,7 +15,13 @@ public class HeapOOM {
 		List<OOMObject> list = new ArrayList<OOMObject>();
 	      
 	      while(true){
+	    	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 	        list.add(new OOMObject());
+	        new OOMObject();
 	      }
 	}
 

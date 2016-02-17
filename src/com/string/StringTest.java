@@ -1,6 +1,5 @@
 package com.string;
 
-import java.lang.reflect.Method;
 
 /**
  * String 测试
@@ -38,8 +37,9 @@ public class StringTest {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		//StringTest st = new StringTest();
-		//st.strBufAppend();
-		Class clazz = Class.forName("com.string.StringTest");
+		//Class clazz = Class.forName("com.string.StringTest");
+		StringTest st = new StringTest();
+		st.strBufAppend();
+		new StringTest();
 	}
 }
